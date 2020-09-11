@@ -42,15 +42,14 @@ def game_loop(display):		#all the function are called using this function
 	
 	x_change=0	#set x position at x axis
 	y_change=0	#set y position at y axis
-	
-	random.seed(1)
+	random.seed(3)
 	time = 0
-
-	obstaclecar_speed=9	#obstacle car speed
+	
+	obstaclecar_speed=15	#obstacle car speed
 	
 	obstacle = 0	#obstacle car is 0 stage
-	obstacle_startx=random.randrange(355,590, 80) 	#obstacle car in x axis comes randomly
-	obstacle_starty=-600 #obstacle car comes in y axis -600 becuase opposite side
+	obstacle_startx=random.randrange(355,590, 125) 	#obstacle car in x axis comes randomly
+	obstacle_starty=-120 #obstacle car comes in y axis -600 becuase opposite side
 	
 	obstacle_width=52 	#obstacle car width
 	obstacle_height=100	#obstacle car height
@@ -63,13 +62,19 @@ def game_loop(display):		#all the function are called using this function
 				pygame.quit()
 				quit()
 
-			if event.type==pygame.KEYDOWN:	#if any key pressed
-				if event.key==pygame.K_LEFT:	#if pressed key is left
-					x_change=-5		#move left side -5
-				if event.key==pygame.K_RIGHT:	#if pressed key is right
-					x_change=5		#move right side +5
-			if event.type==pygame.KEYUP:	#if key unpressed then
-				x_change=0
+		#	if event.type==pygame.KEYDOWN:	#if any key pressed
+		#		if event.key==pygame.K_LEFT:	#if pressed key is left
+		#			x_change=-5		#move left side -5
+		#		if event.key==pygame.K_RIGHT:	#if pressed key is right
+		#			x_change=5		#move right side +5
+		#	if event.type==pygame.KEYUP:	#if key unpressed then
+		#		x_change=0
+
+		if obstacle_starty > 0:
+			if y - (obstacle_starty + obstacle_height) < 10:
+				if x > obstacle_startx and x < obstacle_startx + obstacle_width or x + car_width > obstacle_startx and x + car_width < obstacle_startx + obstacle_width:
+					x_change = 60
+		
 		x+=x_change
 
 		display.blit(backasfalt, (0,0))	#apply colour to display
@@ -80,6 +85,7 @@ def game_loop(display):		#all the function are called using this function
 		obstacle_starty+=obstaclecar_speed			#obstacle car speed increse
 
 		car(display, x,y)	#call the function of car
+
 			
 		if x<330 or x>670-car_width:		#if car goes out of this range
 		#	bumped=True				#stop the game
@@ -87,15 +93,15 @@ def game_loop(display):		#all the function are called using this function
 		
 		#generate obstacles
 		if obstacle_starty>600:		#obstacle car pass it without crashed
-			obstacle_starty=0-obstacle_height	#only one car is crossed
-			obstacle_startx=random.randrange(100)	#anthor car is come 
+			obstacle_starty=0 - obstacle_height	#only one car is crossed
+			obstacle_startx=random.randrange(355,590, 125)	#anthor car is come 
 			print(random.choice(options))
 			obstacle=random.randrange(0,2)	#diffrent car come
 			time += 1
 			print(time)
 
 		if y<obstacle_starty+obstacle_height: #if obstacle car not pass
-			if x > obstacle_startx and x < obstacle_startx + obstacle_width or x + car_width > obstacle_startx and x + car_width < obstacle_startx + obstacle_width or x == obstacle_startx and y == obstacle_starty + obstacle_height:
+			if x > obstacle_startx and x < obstacle_startx + obstacle_width or x + car_width > obstacle_startx and x + car_width < obstacle_startx + obstacle_width:
 				crash(display)	#crash the car			
 
 		pygame.display.update()		#update the display	
