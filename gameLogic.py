@@ -5,7 +5,11 @@ from message import message_display
 
 #colours
 grey = (118,119,110)	
-black = (0,0,0)	
+black = (0,0,0)
+
+
+#obstacles x
+options = [355,475,590]
 
 #image assets
 carimg = pygame.image.load("assets/icar2.png")	#load car image
@@ -39,13 +43,13 @@ def game_loop(display):		#all the function are called using this function
 	x_change=0	#set x position at x axis
 	y_change=0	#set y position at y axis
 	
-	random.seed(0)
+	random.seed(1)
 	time = 0
 
 	obstaclecar_speed=9	#obstacle car speed
 	
 	obstacle = 0	#obstacle car is 0 stage
-	obstacle_startx=random.randrange(475,(476)) 	#obstacle car in x axis comes randomly
+	obstacle_startx=random.randrange(355,590, 80) 	#obstacle car in x axis comes randomly
 	obstacle_starty=-600 #obstacle car comes in y axis -600 becuase opposite side
 	
 	obstacle_width=52 	#obstacle car width
@@ -77,17 +81,15 @@ def game_loop(display):		#all the function are called using this function
 
 		car(display, x,y)	#call the function of car
 			
-		if x<130 or x>700-car_width:		#if car goes out of this range
+		if x<330 or x>670-car_width:		#if car goes out of this range
 		#	bumped=True				#stop the game
 			crash(display)					#call crash function
 		
-
-
 		#generate obstacles
 		if obstacle_starty>600:		#obstacle car pass it without crashed
-			random.seed(0)
 			obstacle_starty=0-obstacle_height	#only one car is crossed
-			obstacle_startx=random.randrange(475,476)	#anthor car is come 
+			obstacle_startx=random.randrange(100)	#anthor car is come 
+			print(random.choice(options))
 			obstacle=random.randrange(0,2)	#diffrent car come
 			time += 1
 			print(time)
