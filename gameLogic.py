@@ -1,10 +1,11 @@
 import pygame	
 import random
+import math 
 
 from genAlgorithmFunctions import populate
 from models.car import Car
 from models.obstacle import Obstacle
-from message import detail_message_display
+from message import generation_message_display, genoma_message_display, time_message_display
 
 #colours
 from utils.obstaclesFactory import generateObstacles
@@ -94,11 +95,10 @@ def game_loop(display):		#all the function are called using this function
 				pygame.quit()
 				quit()
 
-		time += 1
-
+		time += 0.1
 		if currentDirection < sizePopulation:
 			if obstaclesCounter == sizeObstacles:
-				timeList[currentGeneration][currentDirection] = time/3
+				timeList[currentGeneration][currentDirection] = time
 				print("Generación: " + str(currentGeneration + 1))
 				print("Dirección (Genoma): " + str(currentDirection + 1))
 				print("Tiempo que tarda: " + str(timeList[currentGeneration][currentDirection]))
@@ -139,11 +139,13 @@ def game_loop(display):		#all the function are called using this function
 		obstacleList[obstaclesCounter].draw(display)
 		obstacleList[obstaclesCounter].y += obstacleList[obstaclesCounter].speed
 
+		generation_message_display("Generación: " + str(currentGeneration + 1), display)
+		genoma_message_display("Dirección (Genoma): " + str(currentDirection + 1), display)
+		time_message_display("Tiempo que tarda: " + str(math.trunc(time)), display)
 		theCar.draw(display)
 		################################
 
-
-		
+			
 		######## PASSED OBSTACLE WITHOUT CRASH ########
 
 		if obstacleList[obstaclesCounter].y > 600:
@@ -177,13 +179,10 @@ def game_loop(display):		#all the function are called using this function
 				currentListDirections = newGenerationDirections
 				time = 0
 			else:
-				timeList[currentGeneration][currentDirection] = time / 3
+				timeList[currentGeneration][currentDirection] = time
 				print("Generación: " + str(currentGeneration + 1))
 				print("Dirección (Genoma): " + str(currentDirection + 1))
 				print("Tiempo que tarda: " + str(timeList[currentGeneration][currentDirection]))
-
-				detail_message_display("Dirección (Genoma): " + str(currentDirection + 1), display)
-
 				obstaclesCounter = 0
 				currentDirection += 1
 				time = 0
