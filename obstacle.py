@@ -11,3 +11,4 @@ def gobstacle(obstacle_startx,obstacle_starty, obstacle, display): 	#define obst
 		obstacle_come = pygame.image.load("assets/loli1.png")	#police car1 come
 
 	display.blit(obstacle_come,(obstacle_startx,obstacle_starty))	#display the police car
+

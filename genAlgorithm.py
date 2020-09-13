@@ -44,7 +44,7 @@ def fitness(genome: Genome, things: [Thing], weight_limit: int) -> int:
     value = 0
 
     for i, thing in enumerate(things):
-        if genome[i] ==1:
+        if genome[i] == 1:
             weight += thing.weight
             value += thing.value
 
@@ -88,11 +88,11 @@ def run_evolution(
     selection_func: SelectionFunc = selection_pair,
     crossover_func: CrossoverFunc = single_point_Crossover,
     mutation_func: MutationFunc = mutation,
-    generation_limit: int = 100, 
-) -> Tuple[Population, int]:
+    generation_limit: int = 100) -> Tuple[Population, int]:
     population = populate_func()
 
     for i in range(generation_limit):
+
         population = sorted(
             population,
             key = lambda genome: fitness_func(genome),
