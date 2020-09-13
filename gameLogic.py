@@ -4,6 +4,7 @@ import random
 from genAlgorithmFunctions import populate
 from models.car import Car
 from models.obstacle import Obstacle
+from message import detail_message_display
 
 #colours
 from utils.obstaclesFactory import generateObstacles
@@ -98,8 +99,8 @@ def game_loop(display):		#all the function are called using this function
 		if currentDirection < sizePopulation:
 			if obstaclesCounter == sizeObstacles:
 				timeList[currentGeneration][currentDirection] = time/3
-				print("Generación: " + str(currentGeneration))
-				print("Dirección (Genoma): " + str(currentDirection))
+				print("Generación: " + str(currentGeneration + 1))
+				print("Dirección (Genoma): " + str(currentDirection + 1))
 				print("Tiempo que tarda: " + str(timeList[currentGeneration][currentDirection]))
 				time = 0
 				currentDirection += 1
@@ -143,7 +144,7 @@ def game_loop(display):		#all the function are called using this function
 
 
 		
-		######## PASSED OBSTACLE ########
+		######## PASSED OBSTACLE WITHOUT CRASH ########
 
 		if obstacleList[obstaclesCounter].y > 600:
 			obstaclesCounter += 1
@@ -164,7 +165,8 @@ def game_loop(display):		#all the function are called using this function
 
 		if crashedWithAsfalt or crashedWithObstacle:
 			theCar.crash(display)
-
+			theCar.setX(475)
+			itMoved = False
 			if currentDirection == sizePopulation:
 				print(timeList[currentGeneration][currentDirection])
 				timeList.append([0.0 for _ in range(sizePopulation)])
@@ -176,13 +178,16 @@ def game_loop(display):		#all the function are called using this function
 				time = 0
 			else:
 				timeList[currentGeneration][currentDirection] = time / 3
-				print("Generación: " + str(currentGeneration))
-				print("Dirección (Genoma): " + str(currentDirection))
+				print("Generación: " + str(currentGeneration + 1))
+				print("Dirección (Genoma): " + str(currentDirection + 1))
 				print("Tiempo que tarda: " + str(timeList[currentGeneration][currentDirection]))
+
+				detail_message_display("Dirección (Genoma): " + str(currentDirection + 1), display)
+
 				obstaclesCounter = 0
 				currentDirection += 1
 				time = 0
-			theCar.setX(475)
+			
 			obstacleList = generateObstacles()
 			sizeObstacles = len(obstacleList)
 			crashedWithAsfalt = False

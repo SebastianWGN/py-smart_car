@@ -3,9 +3,9 @@ from models.obstacle import Obstacle
 
 def generateObstacles():
     lista = []
-    xCarril1 = 394
-    xCarril2 = xCarril1 + 52 + 60
-    xCarril3 = xCarril2 + 52 + 60
+    xCarril1 = 355
+    xCarril2 = 480
+    xCarril3 = 595
     fh = open('text_files\\obstacles.txt')
 
     for line in fh.readlines():
