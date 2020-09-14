@@ -1,11 +1,14 @@
 from random import choices
 import random as r
 from typing import List
+import random
+from datetime import datetime
 
 Genoma = List[int]
-
+r.seed(datetime.now())
 
 def generateGenoma(length: int) -> Genoma:
+    
     return choices([-1, 0, 1], k=length)
 
 def populate(length: int, size: int):
@@ -61,7 +64,14 @@ def mutation(populationSize, generationList, mutationRate):
         if mutationRate > p:
             #mutation
             idx = r.randint(0,len(generationList[0])-1)
-            generationList[i][idx] = generationList[i][idx] * -1
+            
+            end = len(generationList[0])//2
+            if (idx + end ) > len(generationList[0]):
+                end = len(generationList[0])
+                generationList[i][idx:] = r.choices([-1,0,1], k=end-idx)
+            else:
+                generationList[i][idx: idx+end ] = r.choices(population=[-1,0,1], k=end)
+
         results.append(generationList[i])
 
     return results

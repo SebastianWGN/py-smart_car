@@ -54,7 +54,7 @@ def carMoves(obstacle: Obstacle, car: Car, currentDirection: int):
 	return False
 
 
-mutationRate = 0.3
+mutationRate = 0.5
 parents = []
 # Generamos el carro
 theCar = Car(475, 540, 52)
@@ -122,6 +122,7 @@ def game_loop(display):		#all the function are called using this function
 				print("Dirección (Genoma): " + str(currentDirection + 1))
 				print("Tiempo(Genoma): " + str(timeList[currentGeneration][currentDirection]))
 				print("Tiempo maximo: " + str(maxTime))
+				print("obstaculos: " + str(obstaclesCounter))
 				time = 0
 				currentDirection += 1
 				obstaclesCounter = 0
@@ -142,11 +143,11 @@ def game_loop(display):		#all the function are called using this function
 			#newGenerationDirections = populate(sizeObstacles, sizePopulation)
 			currentListDirections.append(crossover(parents, sizePopulation, currentListDirections[currentGeneration] ))
 	
+			currentGeneration += 1
 			#MUTATION
 			global mutationRate
 			currentListDirections[currentGeneration] = mutation(sizePopulation, currentListDirections[currentGeneration], mutationRate)
 
-			currentGeneration += 1
 			#print(timeList[currentGeneration][currentDirection])
 			timeList.append([0.0 for _ in range(sizePopulation)])
 			time = 0
@@ -187,6 +188,9 @@ def game_loop(display):		#all the function are called using this function
 		if obstacleList[obstaclesCounter].y > 600:
 			obstaclesCounter += 1
 			itMoved = False
+		if obstaclesCounter >= len(obstacleList):
+			break
+			#TERMINAR AQUI
 
 		################################
 
@@ -227,6 +231,7 @@ def game_loop(display):		#all the function are called using this function
 				print("Dirección (Genoma): " + str(currentDirection + 1))
 				print("Tiempo que tarda: " + str(timeList[currentGeneration][currentDirection]))
 				print("Tiempo maximo: " + str(maxTime))
+				print("obstaculos: " + str(obstaclesCounter))
 				obstaclesCounter = 0
 				currentDirection += 1
 				time = 0
