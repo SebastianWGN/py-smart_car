@@ -5,7 +5,7 @@ import math
 from genAlgorithmFunctions import populate, selection, crossover, mutation
 from models.car import Car
 from models.obstacle import Obstacle
-from message import generation_message_display, genoma_message_display, time_message_display
+from message import generation_message_display, genoma_message_display, time_message_display, maxtime_message_display
 
 #colours
 from utils.obstaclesFactory import generateObstacles
@@ -19,6 +19,7 @@ random.seed(3)
 backasfalt = pygame.image.load("assets/asfalto.jpg") #imagen del asfalto
 backgroundleft=pygame.image.load("assets/left.png")	#imagen del cesped izquierdo
 backgroundright=pygame.image.load("assets/right.png")	#imagen del cesped derecho
+bkg=pygame.image.load("assets/background.jpg")
 
 asfaltLeftLimitX = 330
 asfaltRightLimitX = 670
@@ -60,10 +61,11 @@ theCar = Car(475, 540, 52)
 # Tamaño de la población
 sizePopulation = 10
 
+maxtime = 0 
 
 #Logic in game
 def game_loop(display):		#all the function are called using this function
-
+	bkgy = 0
 	itMoved = False
 
 	# Indice de la lista de direcciones en ejecución que ira aumentando para acceder a la siguiente lista (Genoma)
@@ -93,19 +95,32 @@ def game_loop(display):		#all the function are called using this function
 	#iteration for every genoma
 	bumped = False	
 	while not bumped:	#game is started
+		global maxtime
 		for event in pygame.event.get(): 	#if any input is given
 			if event.type==pygame.QUIT:		#if quit input is given
 			#bumped=True		#game is stopped
 				pygame.quit()
 				quit()
-
+		rel_y = bkgy % 1200
+		display.blit(bkg, (0, rel_y - 1200))
+		if rel_y < 600:
+			display.blit(bkg, (0, rel_y))
+		bkgy += 10
 		time += 0.1
+
+
+
 		if currentDirection < sizePopulation:
+			#MAX TIME
+			if maxtime > max(timeList[currentGeneration]):
+				maxtime = max(timeList[currentGeneration])
+
 			if obstaclesCounter == sizeObstacles:
 				timeList[currentGeneration][currentDirection] = time
 				print("Generación: " + str(currentGeneration + 1))
 				print("Dirección (Genoma): " + str(currentDirection + 1))
-				print("Tiempo que tarda: " + str(timeList[currentGeneration][currentDirection]))
+				print("Tiempo(Genoma): " + str(timeList[currentGeneration][currentDirection]))
+				print("Tiempo maximo: " + str(maxtime))
 				time = 0
 				currentDirection += 1
 				obstaclesCounter = 0
@@ -114,6 +129,10 @@ def game_loop(display):		#all the function are called using this function
 
 		#Previous generation ended
 		else:
+			#MAX TIME
+			if maxtime > max(timeList[currentGeneration]):
+				maxtime = max(timeList[currentGeneration])
+
 			#SELECTION HERE
 			global parents
 			parents  = selection(sizePopulation, timeList[currentGeneration])
@@ -147,7 +166,7 @@ def game_loop(display):		#all the function are called using this function
 
 
 		############# DISPLAYS #############
-		background(display)
+		#background(display)
 
 		#Para que me explique pepino la utilidad
 		obstacleList[obstaclesCounter].y -= (obstacleList[obstaclesCounter].speed/4)
@@ -155,8 +174,9 @@ def game_loop(display):		#all the function are called using this function
 		obstacleList[obstaclesCounter].y += obstacleList[obstaclesCounter].speed
 
 		generation_message_display("Generación: " + str(currentGeneration + 1), display)
-		genoma_message_display("Dirección (Genoma): " + str(currentDirection + 1), display)
-		time_message_display("Tiempo que tarda: " + str(math.trunc(time)), display)
+		genoma_message_display("Genoma: " + str(currentDirection + 1), display)
+		time_message_display("Tiempo: " + str(math.trunc(time)), display)
+		maxtime_message_display("Tiempo máximo: " + str(maxtime), display)
 		theCar.draw(display)
 		################################
 
@@ -205,6 +225,7 @@ def game_loop(display):		#all the function are called using this function
 				print("Generación: " + str(currentGeneration + 1))
 				print("Dirección (Genoma): " + str(currentDirection + 1))
 				print("Tiempo que tarda: " + str(timeList[currentGeneration][currentDirection]))
+				print("Tiempo maximo: " + str(maxtime))
 				obstaclesCounter = 0
 				currentDirection += 1
 				time = 0
