@@ -5,7 +5,7 @@ import math
 from genAlgorithmFunctions import populate, selection, crossover, mutation
 from models.car import Car
 from models.obstacle import Obstacle
-from message import generation_message_display, genoma_message_display, time_message_display, maxtime_message_display
+from message import generation_message_display, genoma_message_display, time_message_display, maxtime_message_display, message_display
 
 #colours
 from utils.obstaclesFactory import generateObstacles
@@ -54,7 +54,7 @@ def carMoves(obstacle: Obstacle, car: Car, currentDirection: int):
 	return False
 
 
-mutationRate = 0.3
+mutationRate = 0.5
 parents = []
 # Generamos el carro
 theCar = Car(475, 540, 52)
@@ -189,8 +189,9 @@ def game_loop(display):		#all the function are called using this function
 			obstaclesCounter += 1
 			itMoved = False
 		if obstaclesCounter >= len(obstacleList):
-			print("se acabo")
-			break
+			message_display("You Win", display)
+			time.sleep(20)
+			continue
 			#TERMINAR AQUI
 
 		################################
