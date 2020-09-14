@@ -2,7 +2,7 @@ import pygame
 import random
 import math 
 
-from genAlgorithmFunctions import populate
+from genAlgorithmFunctions import populate, selection
 from models.car import Car
 from models.obstacle import Obstacle
 from message import generation_message_display, genoma_message_display, time_message_display
@@ -29,6 +29,7 @@ def background(display):
 	display.blit(backgroundright,(666,0))	#set right side position of background image at x axis & y axis
 
 
+#Function that verifies collision with obstacle
 def crashWithObstacle(obstacle: Obstacle, car: Car) -> bool:
 	if car.y < obstacle.y + obstacle.height:  # if obstacle car not pass
 		if car.x > obstacle.x and car.x < obstacle.x + obstacle.width \
@@ -37,7 +38,7 @@ def crashWithObstacle(obstacle: Obstacle, car: Car) -> bool:
 	else:
 		return False
 
-
+#Function that verifies colission with asphalt boundaries
 def crashWithAsfaltLimit(car: Car, asfaltLimitLeft: float, asfaltLimitRight: float) -> bool:
 	if car.x < asfaltLeftLimitX or car.x > asfaltRightLimitX - car.width:
 		return True
@@ -52,7 +53,7 @@ def carMoves(obstacle: Obstacle, car: Car, currentDirection: int):
 	return False
 
 
-
+parents = []
 # Generamos el carro
 theCar = Car(475, 540, 52)
 
@@ -73,11 +74,11 @@ def game_loop(display):		#all the function are called using this function
 
 	# Matriz de tiempos donde cada elemento es lo que tarda en terminar el recorrido
 	# una determinada lista de direcciones en una generación
+	#timeList: rows are generations, columns are genomas
 	timeList = [[0.0 for _ in range(sizePopulation)]]
 
 	# Generación inicial
 	currentGeneration = 0
-
 	time = 0
 
 	# Generamos la lista de obstaculos
@@ -87,11 +88,12 @@ def game_loop(display):		#all the function are called using this function
 	# Creamos la población de direcciones inicial
 	currentListDirections = populate(sizeObstacles, sizePopulation)
 
-	bumped = False	#if game is not any problem to start
-	while not bumped:	#game is start
+	#iteration for every genoma
+	bumped = False	
+	while not bumped:	#game is started
 		for event in pygame.event.get(): 	#if any input is given
 			if event.type==pygame.QUIT:		#if quit input is given
-			#	bumped=True		#game is stop
+			#bumped=True		#game is stopped
 				pygame.quit()
 				quit()
 
@@ -108,10 +110,14 @@ def game_loop(display):		#all the function are called using this function
 				obstacleList = generateObstacles()
 				sizeObstacles = len(obstacleList)
 
-
+		#Previous generation ended
 		else:
+			#SELECTION HERE
+			global parents
+			parents  = selection(sizePopulation, timeList[currentGeneration])
+
 			currentGeneration += 1
-			print(timeList[currentGeneration][currentDirection])
+			#print(timeList[currentGeneration][currentDirection])
 			timeList.append([0.0 for _ in range(sizePopulation)])
 			time = 0
 			currentDirection = 0
@@ -156,6 +162,7 @@ def game_loop(display):		#all the function are called using this function
 
 		#COLOCAR CONDICIÓN DE CREACIÓN DE GENERACIÓN SIGUIENTE
 
+
 		####### CRASH CONDITIONS #######
 
 		# Car crash with one of the asfalt limits
@@ -164,12 +171,15 @@ def game_loop(display):		#all the function are called using this function
 		# Car crash with the obstacle
 		crashedWithObstacle = crashWithObstacle(obstacleList[obstaclesCounter], theCar)
 
-
+		#detect crashes
 		if crashedWithAsfalt or crashedWithObstacle:
 			theCar.crash(display)
 			theCar.setX(475)
 			itMoved = False
 			if currentDirection == sizePopulation:
+
+				
+				#continue with next generation
 				print(timeList[currentGeneration][currentDirection])
 				timeList.append([0.0 for _ in range(sizePopulation)])
 				currentDirection = 0
@@ -179,6 +189,7 @@ def game_loop(display):		#all the function are called using this function
 				currentListDirections = newGenerationDirections
 				time = 0
 			else:
+				#continue with next genome
 				timeList[currentGeneration][currentDirection] = time
 				print("Generación: " + str(currentGeneration + 1))
 				print("Dirección (Genoma): " + str(currentDirection + 1))
@@ -186,6 +197,7 @@ def game_loop(display):		#all the function are called using this function
 				obstaclesCounter = 0
 				currentDirection += 1
 				time = 0
+				
 			
 			obstacleList = generateObstacles()
 			sizeObstacles = len(obstacleList)
