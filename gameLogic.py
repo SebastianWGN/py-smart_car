@@ -114,7 +114,7 @@ def game_loop(display):		#all the function are called using this function
 		if currentDirection < sizePopulation:
 			#MAX TIME
 			if max(timeList[currentGeneration]) > maxTime:
-				maxTime = trunc(max(timeList[currentGeneration]))
+				maxTime = math.trunc(max(timeList[currentGeneration]))
 
 			if obstaclesCounter == sizeObstacles:
 				timeList[currentGeneration][currentDirection] = time
@@ -132,7 +132,7 @@ def game_loop(display):		#all the function are called using this function
 		else:
 			#MAX TIME
 			if max(timeList[currentGeneration]) > maxTime:
-				maxTime = trunc(max(timeList[currentGeneration]))
+				maxTime = math.trunc(max(timeList[currentGeneration]))
 
 			#SELECTION HERE
 			global parents
