@@ -2,7 +2,7 @@ import pygame
 import random
 import math 
 
-from genAlgorithmFunctions import populate, selection
+from genAlgorithmFunctions import populate, selection, crossover, mutation
 from models.car import Car
 from models.obstacle import Obstacle
 from message import generation_message_display, genoma_message_display, time_message_display
@@ -52,7 +52,7 @@ def carMoves(obstacle: Obstacle, car: Car, currentDirection: int):
 				return True
 	return False
 
-
+mutationRate = 0.9
 parents = []
 # Generamos el carro
 theCar = Car(475, 540, 52)
@@ -80,13 +80,15 @@ def game_loop(display):		#all the function are called using this function
 	# Generación inicial
 	currentGeneration = 0
 	time = 0
+	
 
 	# Generamos la lista de obstaculos
 	obstacleList = generateObstacles()
 	sizeObstacles = len(obstacleList)  # Tamaño de la lista de obstaculos
 
 	# Creamos la población de direcciones inicial
-	currentListDirections = populate(sizeObstacles, sizePopulation)
+	currentListDirections = []
+	currentListDirections.append(populate(sizeObstacles, sizePopulation))
 
 	#iteration for every genoma
 	bumped = False	
@@ -116,14 +118,21 @@ def game_loop(display):		#all the function are called using this function
 			global parents
 			parents  = selection(sizePopulation, timeList[currentGeneration])
 
+			#CROSSOVER
+			#newGenerationDirections = populate(sizeObstacles, sizePopulation)
+			currentListDirections.append(crossover(parents, sizePopulation, currentListDirections[currentGeneration] ))
+	
+			#MUTATION
+			global mutationRate
+			currentListDirections[currentGeneration] = mutation(sizePopulation, currentListDirections[currentGeneration], mutationRate)
+
 			currentGeneration += 1
 			#print(timeList[currentGeneration][currentDirection])
 			timeList.append([0.0 for _ in range(sizePopulation)])
 			time = 0
 			currentDirection = 0
 			obstaclesCounter = 0
-			newGenerationDirections = populate(sizeObstacles, sizePopulation)
-			currentListDirections = newGenerationDirections
+
 			obstacleList = generateObstacles()
 			sizeObstacles = len(obstacleList)
 
@@ -132,7 +141,7 @@ def game_loop(display):		#all the function are called using this function
 		if not itMoved:
 			itMoved = carMoves(obstacleList[obstaclesCounter],
 					 theCar,
-					 currentListDirections[currentDirection][obstaclesCounter])
+					 currentListDirections[currentGeneration][currentDirection][obstaclesCounter])
 
 		################################
 
@@ -178,7 +187,8 @@ def game_loop(display):		#all the function are called using this function
 			itMoved = False
 			if currentDirection == sizePopulation:
 
-				
+				"""
+				ESTO NUNCA SE EJECUTA
 				#continue with next generation
 				print(timeList[currentGeneration][currentDirection])
 				timeList.append([0.0 for _ in range(sizePopulation)])
@@ -188,6 +198,7 @@ def game_loop(display):		#all the function are called using this function
 				newGenerationDirections = populate(sizeObstacles, sizePopulation)
 				currentListDirections = newGenerationDirections
 				time = 0
+				"""
 			else:
 				#continue with next genome
 				timeList[currentGeneration][currentDirection] = time

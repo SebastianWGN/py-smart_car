@@ -2,7 +2,7 @@ from models.obstacle import Obstacle
 
 
 def generateObstacles():
-    speed = 50
+    speed = 15
     lista = []
     xCarril1 = 355
     xCarril2 = 480

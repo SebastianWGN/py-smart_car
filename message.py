@@ -14,7 +14,7 @@ def message_display(text, display):		#create function for message edit
 	textrect.center=((400),(300))	#show the message position in display
 	display.blit(textsurf,textrect)	#display this message 
 	pygame.display.update()	#update display
-	time.sleep(1)		#after crashed 1 sec restart the game
+	#time.sleep(1)		#after crashed 1 sec restart the game
 
 def generation_message_display(text, display):		#create function for message edit
 	largetext=pygame.font.Font("freesansbold.ttf",20)	#message in this style and the size will be 80
