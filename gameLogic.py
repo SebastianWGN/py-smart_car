@@ -54,7 +54,7 @@ def carMoves(obstacle: Obstacle, car: Car, currentDirection: int):
 	return False
 
 
-mutationRate = 0.5
+mutationRate = 0.3
 parents = []
 # Generamos el carro
 theCar = Car(475, 540, 52)
@@ -189,6 +189,7 @@ def game_loop(display):		#all the function are called using this function
 			obstaclesCounter += 1
 			itMoved = False
 		if obstaclesCounter >= len(obstacleList):
+			print("se acabo")
 			break
 			#TERMINAR AQUI
 
